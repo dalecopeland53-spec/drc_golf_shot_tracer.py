@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.dalecopeland.drcshottracker"
+    namespace = "com.bettergolf.app"
     compileSdk = 36
 
     defaultConfig {
