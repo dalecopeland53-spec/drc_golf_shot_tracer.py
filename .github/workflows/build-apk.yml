@@ -36,10 +36,12 @@ jobs:
           echo "dir=$ANDROID_HOME/build-tools/$BUILD_TOOLS" >> "$GITHUB_OUTPUT"
 
       - name: Verify release signature
-        run: "${{ steps.tools.outputs.dir }}/apksigner" verify --verbose --print-certs app/build/outputs/apk/release/app-release.apk
+        run: |
+          "${{ steps.tools.outputs.dir }}/apksigner" verify --verbose --print-certs app/build/outputs/apk/release/app-release.apk
 
       - name: Verify release alignment
-        run: "${{ steps.tools.outputs.dir }}/zipalign" -c -v 4 app/build/outputs/apk/release/app-release.apk
+        run: |
+          "${{ steps.tools.outputs.dir }}/zipalign" -c -v 4 app/build/outputs/apk/release/app-release.apk
 
       - name: Inspect release package
         run: |
