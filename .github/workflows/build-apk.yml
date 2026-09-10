@@ -28,9 +28,32 @@ jobs:
       - name: Build debug APK
         run: gradle --no-daemon :app:assembleDebug
 
-      - name: Upload APK
+      - name: Find Android build tools
+        id: tools
+        shell: bash
+        run: |
+          BUILD_TOOLS=$(ls -1 "$ANDROID_HOME/build-tools" | sort -V | tail -n 1)
+          echo "dir=$ANDROID_HOME/build-tools/$BUILD_TOOLS" >> "$GITHUB_OUTPUT"
+          echo "Using build tools $BUILD_TOOLS"
+
+      - name: Verify APK signature
+        run: |
+          "${{ steps.tools.outputs.dir }}/apksigner" verify --verbose --print-certs app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Verify APK alignment
+        run: |
+          "${{ steps.tools.outputs.dir }}/zipalign" -c -v 4 app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Inspect APK package and launcher
+        run: |
+          "${{ steps.tools.outputs.dir }}/aapt" dump badging app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Rename verified APK
+        run: cp app/build/outputs/apk/debug/app-debug.apk DRC-SHOT-TRACKER-VERIFIED.apk
+
+      - name: Upload verified APK
         uses: actions/upload-artifact@v4
         with:
-          name: DRC-Shot-Tracker-debug-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: DRC-SHOT-TRACKER-VERIFIED
+          path: DRC-SHOT-TRACKER-VERIFIED.apk
           if-no-files-found: error
