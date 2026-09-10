@@ -7,10 +7,10 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.dalecopeland.drcshottracker"
+        applicationId = "com.drc.shottracker.build12"
         minSdk = 26
         targetSdk = 36
-        versionCode = 2
-        versionName = "1.0.1"
+        versionCode = 12
+        versionName = "1.0.12"
     }
 }
