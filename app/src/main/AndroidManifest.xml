@@ -7,7 +7,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="false">
         <activity
-            android:name=".MainActivity"
+            android:name="com.bettergolf.app.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
