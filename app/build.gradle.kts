@@ -3,14 +3,14 @@ plugins {
 }
 
 android {
-    namespace = "com.bettergolf.app"
+    namespace = "com.dalecopeland.drcshottracker"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.bettergolf.app"
+        applicationId = "com.dalecopeland.drcshottracker"
         minSdk = 26
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.0.1"
     }
 }
