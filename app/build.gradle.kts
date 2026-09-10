@@ -7,10 +7,18 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.drc.shottracker.build12"
+        applicationId = "com.drc.shottracker.release14"
         minSdk = 26
         targetSdk = 36
-        versionCode = 12
-        versionName = "1.0.12"
+        versionCode = 14
+        versionName = "1.0.14"
+    }
+
+    buildTypes {
+        getByName("release") {
+            isDebuggable = false
+            isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("debug")
+        }
     }
 }
