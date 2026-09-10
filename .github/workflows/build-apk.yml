@@ -25,8 +25,8 @@ jobs:
         with:
           gradle-version: '8.13'
 
-      - name: Build debug APK
-        run: gradle --no-daemon :app:assembleDebug
+      - name: Build release APK
+        run: gradle --no-daemon :app:assembleRelease
 
       - name: Find Android build tools
         id: tools
@@ -34,26 +34,28 @@ jobs:
         run: |
           BUILD_TOOLS=$(ls -1 "$ANDROID_HOME/build-tools" | sort -V | tail -n 1)
           echo "dir=$ANDROID_HOME/build-tools/$BUILD_TOOLS" >> "$GITHUB_OUTPUT"
-          echo "Using build tools $BUILD_TOOLS"
 
-      - name: Verify APK signature
+      - name: Verify release signature
+        run: "${{ steps.tools.outputs.dir }}/apksigner" verify --verbose --print-certs app/build/outputs/apk/release/app-release.apk
+
+      - name: Verify release alignment
+        run: "${{ steps.tools.outputs.dir }}/zipalign" -c -v 4 app/build/outputs/apk/release/app-release.apk
+
+      - name: Inspect release package
         run: |
-          "${{ steps.tools.outputs.dir }}/apksigner" verify --verbose --print-certs app/build/outputs/apk/debug/app-debug.apk
+          "${{ steps.tools.outputs.dir }}/aapt" dump badging app/build/outputs/apk/release/app-release.apk
+          if "${{ steps.tools.outputs.dir }}/aapt" dump badging app/build/outputs/apk/release/app-release.apk | grep -q "application-debuggable"; then
+            echo "ERROR: Release APK is still debuggable"
+            exit 1
+          fi
+          echo "Release APK is non-debuggable"
 
-      - name: Verify APK alignment
-        run: |
-          "${{ steps.tools.outputs.dir }}/zipalign" -c -v 4 app/build/outputs/apk/debug/app-debug.apk
+      - name: Rename release APK
+        run: cp app/build/outputs/apk/release/app-release.apk DRC-SHOT-TRACKER-RELEASE-14.apk
 
-      - name: Inspect APK package and launcher
-        run: |
-          "${{ steps.tools.outputs.dir }}/aapt" dump badging app/build/outputs/apk/debug/app-debug.apk
-
-      - name: Rename verified APK
-        run: cp app/build/outputs/apk/debug/app-debug.apk DRC-SHOT-TRACKER-VERIFIED.apk
-
-      - name: Upload verified APK
+      - name: Upload release APK
         uses: actions/upload-artifact@v4
         with:
-          name: DRC-SHOT-TRACKER-VERIFIED
-          path: DRC-SHOT-TRACKER-VERIFIED.apk
+          name: DRC-SHOT-TRACKER-RELEASE-14
+          path: DRC-SHOT-TRACKER-RELEASE-14.apk
           if-no-files-found: error
