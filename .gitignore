@@ -1,6 +1,27 @@
+# Local system and IDE environments
 .gradle/
 .idea/
 local.properties
 **/build/
 *.iml
 .DS_Store
+
+# FIXED: Prevent sensitive production release keys from leaking to GitHub
+*.keystore
+*.jks
+*.p12
+
+# FIXED: Block local environment configurations and private API tokens
+.env
+.env.local
+.env.*.local
+
+# Dependency and output directories
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Capacitor & Expo dynamic artifacts
+.expo/
+.eas/
