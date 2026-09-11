@@ -6,8 +6,16 @@ android {
     namespace = "com.bettergolf.app"
     compileSdk = 36
 
+    // FIXED: Explicitly declare the signingConfigs fallback container block first
+    signingConfigs {
+        getByName("debug") {
+            // Inherits your system's default local debug signing credentials securely
+        }
+    }
+
     defaultConfig {
-        applicationId = "com.drc.shottracker.release14"
+        // RECOMMENDED: Aligned with your native package namespaces for clean sync paths
+        applicationId = "com.bettergolf.app"
         minSdk = 26
         targetSdk = 36
         versionCode = 14
@@ -18,6 +26,7 @@ android {
         getByName("release") {
             isDebuggable = false
             isMinifyEnabled = false
+            // FIXED: Safely hooks the pre-declared debug credential profile container
             signingConfig = signingConfigs.getByName("debug")
         }
     }
